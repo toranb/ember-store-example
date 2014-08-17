@@ -1,31 +1,19 @@
-var Person = Ember.Object.extend({
-    firstName: '',
-    lastName: '',
-    fullName: function() {
-        var firstName = this.get('firstName');
-        var lastName = this.get('lastName');
-        return firstName + ' ' + lastName;
-    }.property('firstName', 'lastName')
-});
+import Model from 'js/model';
+import attr from 'js/attr';
 
-Person.reopenClass({
-    people: [],
-    add: function(hash) {
-        var person = Person.create(hash);
-        this.people.pushObject(person);
+var Person = Model.extend({
+    init: function() {
+        this.$changes = {}
     },
-    remove: function(person) {
-        this.people.removeObject(person);
+    firstName: attr(),
+    lastName: attr(),
+    $mergeChanges: function() {
+      var x = $.extend(this.get('$data', this.get('$changes')));
+      this.set('$changes', {});
+      //this.notifyPropertyChange('$changes');
     },
-    find: function() {
-        var self = this;
-        $.getJSON('/api/people', function(response) {
-            response.forEach(function(hash) {
-                var person = Person.create(hash);
-                Ember.run(self.people, self.people.pushObject, person);
-            });
-        }, this);
-        return this.people;
+    save: function() {
+        this.get('store').scheduleSave(this);
     }
 });
 

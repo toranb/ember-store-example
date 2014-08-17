@@ -1,0 +1,130 @@
+import Person from 'js/models/person';
+import Store from 'js/store';
+
+var store;
+
+module('store push single tests', {
+  setup: function() {
+    var container = new Ember.Container();
+    this.container = container;
+    container.register('store:main', Store);
+    container.register('model:person', Person);
+    store = container.lookup('store:main');
+  }
+});
+
+test("records can be pushed into the store", function() {
+  store.push("person", {
+    id: "toranb",
+    firstName: "Toran",
+    lastName: "Billups"
+  });
+
+  var toranb = store.getById('person', 'toranb');
+  ok(toranb, "The toranb record was found");
+
+  equal(toranb.get('$data.firstName'), "Toran", "the firstName property is correct");
+  equal(toranb.get('$data.lastName'), "Billups", "the lastName property is correct");
+  equal(toranb.get('id'), "toranb", "the id property is correct");
+});
+
+test("push returns the created record", function() {
+  var pushedToranb = store.push('person', {
+    id: 'toranb',
+    firstName: "Toran",
+    lastName: "Billups"
+  });
+
+  var gottenToranb = store.getById('person', 'toranb');
+
+  strictEqual(pushedToranb, gottenToranb, "both records are identical");
+});
+
+test("pushing a record into the store twice updates the original record", function() {
+  store.push('person', {
+    id: 'toranb',
+    firstName: "Toran",
+    lastName: "Billups"
+  });
+
+  var toranb = store.getById('person', 'toranb');
+  ok(toranb, "The toranb record was found");
+
+  equal(toranb.get('$data.firstName'), "Toran", "the firstName property is correct");
+  equal(toranb.get('$data.lastName'), "Billups", "the lastName property is correct");
+  equal(toranb.get('id'), "toranb", "the id property is correct");
+
+  store.push('person', {
+    id: 'toranb',
+    firstName: "X",
+    lastName: "Y"
+  });
+
+  equal(toranb.get('$data.firstName'), "X", "the firstName property is correct");
+  equal(toranb.get('$data.lastName'), "Y", "the lastName property is correct");
+  equal(toranb.get('id'), "toranb", "the id property is is correct");
+});
+
+test("pushing doesn't mangle string ids", function() {
+  store.push('person', {
+    id: 'toranb',
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  var toranb = store.getById('person', 'toranb');
+  strictEqual(toranb.get('id'), 'toranb');
+});
+
+test("models with int based ids can be lookedup by either str or int values", function() {
+  store.push('person', {
+    id: 123,
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  var toranbByStr = store.getById('person', '123');
+  strictEqual(toranbByStr.get('id'), 123);
+  ok(toranbByStr instanceof Person);
+
+  var toranbByNum = store.getById('person', 123);
+  strictEqual(toranbByNum.get('id'), 123);
+  ok(toranbByNum instanceof Person);
+});
+
+test("uses lookupFactory somewhere as part of a push", function() {
+  var orig = this.container.lookupFactory,
+      yipee;
+
+  this.container.lookupFactory = function() {
+    yipee = 'doodah';
+    return orig.apply(this, arguments);
+  };
+
+  store.push('person', {
+    id: 1,
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  equal(yipee, 'doodah', "lookupFactory gets called");
+});
+
+test("uses container's returned typeFactory create() for instantiation", function() {
+  var orig = this.container.lookupFactory('model:person'),
+      origCreate = orig.create,
+      ping;
+
+  orig.create = function(opts) {
+    ping = 'pong';
+    return origCreate.apply(this, arguments);
+  };
+
+  store.push('person', {
+    id: 1,
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  equal(ping, 'pong', "create on the lookupFactory gets called");
+});

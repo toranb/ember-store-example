@@ -37,10 +37,6 @@ function async(callback, timeout) {
 require('js/helpers/start-app');
 require('js/store/basic_tests');
 require('js/store/init_tests');
-require('js/store/attr_add_tests');
 require('js/store/push_single_tests');
-require('js/store/attr_set_tests');
-require('js/store/find_async_tests');
-require('js/store/model_save_tests');
 //require('js/integration/integration_tests');
 //require('js/unit/unit_tests');

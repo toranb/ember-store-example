@@ -23,8 +23,8 @@ test("records can be pushed into the store", function() {
   var toranb = store.getById('person', 'toranb');
   ok(toranb, "The toranb record was found");
 
-  equal(toranb.get('$data.firstName'), "Toran", "the firstName property is correct");
-  equal(toranb.get('$data.lastName'), "Billups", "the lastName property is correct");
+  equal(toranb.get('firstName'), "Toran", "the firstName property is correct");
+  equal(toranb.get('lastName'), "Billups", "the lastName property is correct");
   equal(toranb.get('id'), "toranb", "the id property is correct");
 });
 
@@ -50,8 +50,8 @@ test("pushing a record into the store twice updates the original record", functi
   var toranb = store.getById('person', 'toranb');
   ok(toranb, "The toranb record was found");
 
-  equal(toranb.get('$data.firstName'), "Toran", "the firstName property is correct");
-  equal(toranb.get('$data.lastName'), "Billups", "the lastName property is correct");
+  equal(toranb.get('firstName'), "Toran", "the firstName property is correct");
+  equal(toranb.get('lastName'), "Billups", "the lastName property is correct");
   equal(toranb.get('id'), "toranb", "the id property is correct");
 
   store.push('person', {
@@ -60,8 +60,8 @@ test("pushing a record into the store twice updates the original record", functi
     lastName: "Y"
   });
 
-  equal(toranb.get('$data.firstName'), "X", "the firstName property is correct");
-  equal(toranb.get('$data.lastName'), "Y", "the lastName property is correct");
+  equal(toranb.get('firstName'), "X", "the firstName property is correct");
+  equal(toranb.get('lastName'), "Y", "the lastName property is correct");
   equal(toranb.get('id'), "toranb", "the id property is is correct");
 });
 
@@ -127,4 +127,22 @@ test("uses container's returned typeFactory create() for instantiation", functio
   });
 
   equal(ping, 'pong', "create on the lookupFactory gets called");
+});
+
+test("return everything should return array of models", function() {
+  store.push('person', {
+    id: 1,
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  store.push('person', {
+    id: 2,
+    firstName: 'Brandon',
+    lastName: 'Williams'
+  });
+
+  equal(store.getEverything('person').length, 2);
+  equal(store.getEverything('person')[0].get('firstName'), 'Toran');
+  equal(store.getEverything('person')[1].get('firstName'), 'Brandon');
 });

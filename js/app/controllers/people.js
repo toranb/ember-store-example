@@ -3,14 +3,16 @@ import Person from 'js/models/person';
 var PeopleController = Ember.ArrayController.extend({
     actions: {
         addPerson: function() {
+            var store = this.get('store');
             var person = {
                 firstName: this.get('firstName'),
                 lastName: this.get('lastName')
             };
-            Person.add(person);
+            Person.add(store, person);
         },
         deletePerson: function(person) {
-            Person.remove(person);
+            var store = this.get('store');
+            Person.remove(store, person);
         }
     }
 });

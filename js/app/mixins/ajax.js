@@ -8,19 +8,16 @@ var AjaxMixin = Ember.Mixin.create({
     },
     promise: function(url, type, hash) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
-          console.log("1");
           if (hash.data && type !== 'GET') {
             hash.contentType = 'application/json; charset=utf-8';
             hash.data = JSON.stringify(hash.data);
           }
 
           hash.success = function(json) {
-            console.log("2");
             Ember.run(null, resolve, json);
           };
 
           hash.error = function(jqXHR, textStatus, errorThrown) {
-            console.log("3");
             if (jqXHR) {
               jqXHR.then = null;
             }

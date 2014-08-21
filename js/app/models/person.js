@@ -12,6 +12,9 @@ Person.reopenClass({
     add: function(store, person) {
         store.push('person', person);
     },
+    remove: function(store, person) {
+        store.remove('person', person);
+    },
     find: function(store) {
         var models = store.getEverything('person');
         $.getJSON('/api/people', function(response) {

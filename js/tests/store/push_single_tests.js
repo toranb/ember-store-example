@@ -146,3 +146,27 @@ test("return everything should return array of models", function() {
   equal(store.getEverything('person')[0].get('firstName'), 'Toran');
   equal(store.getEverything('person')[1].get('firstName'), 'Brandon');
 });
+
+test("remove should destory the item by type", function() {
+  var first = store.push('person', {
+    id: 1,
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  var last = store.push('person', {
+    id: 2,
+    firstName: 'Brandon',
+    lastName: 'Williams'
+  });
+
+  equal(store.getEverything('person').length, 2);
+  store.remove('person', first);
+  equal(store.getEverything('person').length, 1);
+
+  var first_person = store.getById('person', first.id);
+  ok(!first_person, "The toran record was still found");
+
+  var last_person = store.getById('person', last.id);
+  ok(last_person, "The brandon record was not found");
+});

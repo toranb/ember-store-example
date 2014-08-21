@@ -50,25 +50,25 @@ test('ajax response with 1 person yields table with 1 row', function() {
     });
 });
 
-// test('add will append another person to the html table', function() {
-//     expect(4);
-//     var matt = {firstName: 'matt', lastName: 'morrison'};
-//     visit("/")
-//     .httpRespond("get", "/api/people", [matt])
-//     .then(function() {
-//       var rows = find("table tr").length
-//       equal(rows, 1, "the table had " + rows + " rows");
-//       var fullName = find("table tr:eq(0) td:eq(0)").text();
-//       equal(fullName, "matt morrison", "the first table row had fullName: " + fullName);
-//       fillIn(".firstName", "dustin");
-//       fillIn(".lastName", "thostenson");
-//       return click(".submit");
-//     });
-//     .then(function() {
-//       equal(find("table tr").length, 2, "the table of people was not complete");
-//       equal(find("table tr:eq(1) td:eq(0)").text(), "dustin thostenson", "dustin was not added to the html table");
-//   });
-// });
+test('add will append another person to the html table', function() {
+    expect(4);
+    var matt = {id: 6, firstName: 'matt', lastName: 'morrison'};
+    visit("/")
+    .httpRespond("get", "/api/people", [matt])
+    .then(function() {
+      var rows = find("table tr").length
+      equal(rows, 1, "the table had " + rows + " rows");
+      var fullName = find("table tr:eq(0) td:eq(0)").text();
+      equal(fullName, "matt morrison", "the first table row had fullName: " + fullName);
+      fillIn(".firstName", "dustin");
+      fillIn(".lastName", "thostenson");
+      return click(".submit");
+    });
+    andThen(function() {
+      equal(find("table tr").length, 2, "the table of people was not complete");
+      equal(find("table tr:eq(1) td:eq(0)").text(), "dustin thostenson", "dustin was not added to the html table");
+    });
+});
 
 // test('delete will remove the person for a given row', function() {
 //     expect(5);

@@ -4,14 +4,14 @@ function buildRecord(type, data, store) {
     var record = factory.create(data);
     var id = data.id;
     identityMapForType(type, store)[id] = record;
-    everythingArrayForType(type, store).pushObject(record);
+    arrayForType(type, store).pushObject(record);
     return record;
 }
 
-function everythingArrayForType(type, store) {
-    var everythingArrays = store.get('everythingArrays');
-    var models = everythingArrays[type] || [];
-    everythingArrays[type] = models;
+function arrayForType(type, store) {
+    var all = store.get('array');
+    var models = all[type] || [];
+    all[type] = models;
     return models;
 }
 
@@ -25,7 +25,7 @@ function identityMapForType(type, store) {
 var Store = Ember.Object.extend({
     init: function() {
         this.set('identityMap', {});
-        this.set('everythingArrays', {});
+        this.set('array', {});
     },
     push: function(type, data) {
         var record = this.getById(type, data.id);
@@ -40,7 +40,7 @@ var Store = Ember.Object.extend({
         var record = this.getById(type, data.id);
         if (record) {
             delete this.get('identityMap')[type][record.id];
-            everythingArrayForType(type, this).removeObject(record);
+            arrayForType(type, this).removeObject(record);
         }
     },
     getById: function(type, id) {
@@ -48,7 +48,7 @@ var Store = Ember.Object.extend({
         return identityMap[id] || null;
     },
     getEverything: function(type) {
-        return everythingArrayForType(type, this);
+        return arrayForType(type, this);
     }
 });
 

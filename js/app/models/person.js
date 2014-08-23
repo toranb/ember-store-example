@@ -16,13 +16,12 @@ Person.reopenClass({
         store.remove('person', person);
     },
     find: function(store) {
-        var models = store.getEverything('person');
         $.getJSON('/api/people', function(response) {
             response.forEach(function(person) {
                 store.push('person', person);
             });
         });
-        return models;
+        return store.getEverything('person');
     }
 });
 

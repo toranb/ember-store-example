@@ -1,5 +1,6 @@
-import Store from 'js/store';
+import Store from 'js/initializers/store';
 import Resolver from 'ember/resolver';
+import Bootstrap from 'js/initializers/bootstrap';
 
 var App = Ember.Application.extend({
   LOG_ACTIVE_GENERATION: true,
@@ -11,13 +12,7 @@ var App = Ember.Application.extend({
   Resolver: Resolver['default']
 });
 
-App.initializer({
-    name: "store",
-    initialize: function(container, application) {
-        application.register('store:main', Store);
-        application.inject('controller', 'store', 'store:main');
-        application.inject('route', 'store', 'store:main');
-    }
-});
+Ember.Application.initializer(Store);
+Ember.Application.initializer(Bootstrap);
 
 export default App;

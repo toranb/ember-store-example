@@ -5,8 +5,10 @@
 <table>
 {{#each person in controller}}
 <tr>
+  <td class="name">{{#link-to "people.person" person.id}}details{{/link-to}}</td>
   <td class="name">{{person.fullName}}</td>
   <td><button class="delete" {{action "deletePerson" person}}>Delete</button></td>
 </tr>
 {{/each}}
 </table>
+{{outlet}}

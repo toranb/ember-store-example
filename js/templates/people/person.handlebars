@@ -1,0 +1,9 @@
+<h3>Person {{model.id}}</h3>
+<b>{{model.firstName}}</b>
+<b>{{model.lastName}}</b>
+<b>{{model.fullName}}</b>
+<hr />
+<h4>Actions</h4>
+{{#each action in actions}}
+<p>{{action.opened}}</p>
+{{/each}}

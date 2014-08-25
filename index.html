@@ -7,7 +7,8 @@
 <script src="js/dist/deps.min.js"></script>
 <script src="js/vendor/jquery-mockjax/jquery.mockjax.js"></script>
 <script>
-  var fake = [{id: 1, firstName: "grunt", lastName: "cli"}, {id: 2, firstName: "ember", lastName: "js"}];
+  var people = [{id: 1, firstName: "grunt", lastName: "cli"}, {id: 2, firstName: "ember", lastName: "js"}];
+  var actions = [{id: 6, person_id: 2, opened: "never"}, {id: 9, person_id: 1, opened: "first"}, {id: 8, person_id: 2, opened: "last"}];
 
   $.mockjaxSettings.logging = false;
   $.mockjaxSettings.responseTime = 0;
@@ -15,7 +16,13 @@
   $.mockjax({
     url: '/api/people',
     dataType: 'json',
-    responseText: fake
+    responseText: people
+  });
+
+  $.mockjax({
+    url: '/api/actions',
+    dataType: 'json',
+    responseText: actions
   });
 </script>
 <script>window.App = require('js/app')["default"].create();</script>

@@ -22,6 +22,9 @@ Person.reopenClass({
             });
         });
         return store.getEverything('person');
+    },
+    findById: function(store, id) {
+        return store.getById('person', id);
     }
 });
 

@@ -7,3 +7,12 @@
 {{#each action in actions}}
 <p>{{action.opened}}</p>
 {{/each}}
+<form class="form-horizontal">
+    <div class="form-group">
+        <label for="opened" class="control-label">Opened:</label>
+        {{input class="form-control" id="opened" value=opened}}
+    </div>
+    <div>
+        <button style="margin-left: -15px;" id="add_action" class="btn btn-success" {{action "submit"}}>Create Action</button>
+    </div>
+</form>

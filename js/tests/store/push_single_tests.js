@@ -1,3 +1,4 @@
+import Action from 'js/models/action';
 import Person from 'js/models/person';
 import Store from 'js/store';
 
@@ -9,6 +10,7 @@ module('store push single tests', {
     this.container = container;
     container.register('store:main', Store);
     container.register('model:person', Person);
+    container.register('model:action', Action);
     store = container.lookup('store:main');
   }
 });
@@ -169,4 +171,91 @@ test("remove should destory the item by type", function() {
 
   var last_person = store.getById('person', last.id);
   ok(last_person, "The brandon record was not found");
+});
+
+test("filter everything should return array of models filtered by value", function() {
+  store.push('action', {
+    id: 9,
+    opened: 'first',
+    person_id: 1
+  });
+
+  store.push('action', {
+    id: 8,
+    opened: 'middle',
+    person_id: 2
+  });
+
+  store.push('action', {
+    id: 7,
+    opened: 'last',
+    person_id: 1
+  });
+
+  store.push('person', {
+    id: 1,
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  store.push('person', {
+    id: 2,
+    firstName: 'Brandon',
+    lastName: 'Williams'
+  });
+
+  equal(store.getEverything('action').length, 3);
+  equal(store.getEverything('action')[0].get('person_id'), 1);
+  equal(store.getEverything('action')[1].get('person_id'), 2);
+  equal(store.getEverything('action')[2].get('person_id'), 1);
+
+  equal(store.filterEverything('action', 'person_id', 1).get('length'), 2);
+  equal(store.filterEverything('action', 'person_id', 2).get('length'), 1);
+
+  store.push('action', {
+      id: 14,
+      opened: 'wat',
+      person_id: 1
+  });
+  equal(store.filterEverything('action', 'person_id', 1).get('length'), 3);
+
+  store.push('action', {
+      id: 15,
+      opened: 'hat',
+      person_id: 2
+  });
+  equal(store.filterEverything('action', 'person_id', 2).get('length'), 2);
+
+  equal(store.getEverything('action').length, 5);
+});
+
+test("filter everything should return array of models that tracks changes without asking for an update", function() {
+  store.push('action', {
+    id: 9,
+    opened: 'first',
+    person_id: 1
+  });
+
+  store.push('action', {
+    id: 7,
+    opened: 'last',
+    person_id: 1
+  });
+
+  store.push('person', {
+    id: 1,
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  var firstBoundProperty = store.filterEverything('action', 'person_id', 1);
+  equal(firstBoundProperty.get('length'), 2);
+
+  store.push('action', {
+      id: 14,
+      opened: 'wat',
+      person_id: 1
+  });
+
+  equal(firstBoundProperty.get('length'), 3);
 });

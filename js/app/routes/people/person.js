@@ -5,8 +5,7 @@ var PeoplePersonRoute = Ember.Route.extend({
     model: function(params) {
         var store = this.get('store');
         var person = Person.findById(store, params.person_id);
-        //var actions = Action.findByPerson(store, params.person_id);
-        var actions = Action.find(store);
+        var actions = Action.findByPerson(store, params.person_id);
         return Ember.RSVP.hash({person: person, actions: actions});
     },
     setupController: function(controller, hash) {

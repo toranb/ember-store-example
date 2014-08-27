@@ -20,7 +20,10 @@ function startApp() {
 
   var attributes = {
     rootElement: '#ember-testing',
-    LOG_ACTIVE_GENERATION:false,
+    LOG_ACTIVE_GENERATION: false,
+    LOG_MODULE_RESOLVER: false,
+    LOG_TRANSITIONS: false,
+    LOG_TRANSITIONS_INTERNAL: false,
     LOG_VIEW_LOOKUPS: false
   };
 

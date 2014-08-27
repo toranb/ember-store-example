@@ -259,3 +259,32 @@ test("filter everything should return array of models that tracks changes withou
 
   equal(firstBoundProperty.get('length'), 3);
 });
+
+test("filter everything works with string based values", function() {
+  store.push('person', {
+    id: 9,
+    firstName: 'Jarrod',
+    lastName: 'Williams'
+  });
+
+  store.push('person', {
+    id: 8,
+    firstName: 'Toran',
+    lastName: 'Billups'
+  });
+
+  store.push('person', {
+    id: 7,
+    firstName: 'Brandon',
+    lastName: 'Williams'
+  });
+
+  var foo_data = store.filterEverything('person', 'lastName', 'Williams');
+  var bar_data = store.filterEverything('person', 'lastName', 'Billups');
+
+  equal(foo_data.get('length'), 2);
+  equal(bar_data.get('length'), 1);
+  equal(foo_data.objectAt(0).get('firstName'), 'Jarrod');
+  equal(foo_data.objectAt(1).get('firstName'), 'Brandon');
+  equal(bar_data.objectAt(0).get('firstName'), 'Toran');
+});

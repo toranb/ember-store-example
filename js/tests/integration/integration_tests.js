@@ -58,7 +58,7 @@ test('add will append another person to the html table', function() {
     .then(function() {
       var rows = find("table tr").length
       equal(rows, 1, "the table had " + rows + " rows");
-      var fullName = find("table tr:eq(0) td:eq(0)").text();
+      var fullName = find("table tr:eq(0) .name").text();
       equal(fullName, "matt morrison", "the first table row had fullName: " + fullName);
       fillIn(".firstName", "dustin");
       fillIn(".lastName", "thostenson");
@@ -66,7 +66,7 @@ test('add will append another person to the html table', function() {
     });
     andThen(function() {
       equal(find("table tr").length, 2, "the table of people was not complete");
-      equal(find("table tr:eq(1) td:eq(0)").text(), "dustin thostenson", "dustin was not added to the html table");
+      equal(find("table tr:eq(1) .name").text(), "dustin thostenson", "dustin was not added to the html table");
     });
 });
 
@@ -79,11 +79,11 @@ test('delete will remove the person for a given row', function() {
     .then(function() {
         var rows = find("table tr").length
         equal(rows, 2, "the table had " + rows + " rows");
-        equal(find("table tr:eq(0) td:eq(0)").text(), "matt morrison", "the first row was incorrect");
-        equal(find("table tr:eq(1) td:eq(0)").text(), "toran billups", "the first row was incorrect");
+        equal(find("table tr:eq(0) .name").text(), "matt morrison", "the first row was incorrect");
+        equal(find("table tr:eq(1) .name").text(), "toran billups", "the first row was incorrect");
         return click("table .delete:first");
     }).then(function() {
         equal(find("table tr").length, 1, "the table of people was not complete");
-        equal(find("table tr:eq(0) td:eq(0)").text(), "toran billups", "the wrong person was deleted");
+        equal(find("table tr:eq(0) .name").text(), "toran billups", "the wrong person was deleted");
     });
 });

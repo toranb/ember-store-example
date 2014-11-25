@@ -17,8 +17,12 @@ Person.reopenClass({
     },
     find: function(store) {
         $.getJSON('/api/people', function(response) {
+            console.log(response);
             response.forEach(function(person) {
-                store.push('person', person);
+                console.log(person);
+                Ember.run(function() {
+                  store.push('person', person);
+                });
             });
         });
         return store.getEverything('person');

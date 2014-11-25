@@ -1,19 +1,12 @@
 {
   "dependencies": {
         "bower": "*",
-        "testem": "*",
-        "gulp-es6-module-transpiler": "*",
         "gulp": "*",
-        "gulp-debug": "*",
-        "gulp-util": "*",
         "gulp-filter": "*",
-        "gulp-coffee": "*",
-        "gulp-coffeelint": "*",
-        "coffee-script": "*",
+        "gulp-rimraf": "*",
         "gulp-concat": "*",
-        "gulp-rev": "*",
-        "gulp-uglify": "*",
-        "gulp-ember-handlebars": "*"
+        "gulp-ember-handlebarz": "1.7.4",
+        "gulp-es6-module-transpiler": "*"
   },
   "devDependencies": {
         "gulp-karma": "*",
@@ -21,7 +14,6 @@
         "karma-phantomjs-launcher": "*",
         "karma-qunit": "*",
         "karma": "0.10",
-        "karma-coverage": "~0.2.4",
         "karma-qunit-special-blend": "0.0.1",
         "qunit-special-blend": "0.0.3"
   },

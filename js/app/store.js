@@ -1,12 +1,52 @@
+function clone(obj) {
+    var copy = {};
+    for(var key in obj){
+        if(obj.hasOwnProperty(key)) {
+            copy[key] = obj[key];
+        }
+    }
+    return copy;
+};
+
+function restore(obj, oldState) {
+    for(var key in oldState){
+        obj.set(key, oldState[key]);
+    }
+};
+
 function buildRecord(type, data, store) {
     var containerKey = 'model:' + type;
     var factory = store.container.lookupFactory(containerKey);
-    var record = factory.create(data);
-    var id = data.id;
-    identityMapForType(type, store)[id] = record;
+    var recordObject = factory.extend({
+        isDirty: false,
+        set: function(key, value) {
+            debugger;
+            if(this.get(key) !== value && !this.get('isDirty')) {
+                this._super('isDirty', true);
+                var oldState = clone(this);
+                this._super('_oldState', oldState);
+            }
+            return this._super(key, value);
+        },
+        save: function() {
+            this._clear();
+            this._super();
+        },
+        revert: function() {
+            restore(this, this.get('_oldState'));
+            this._clear();
+            this._super();
+        },
+        _clear: function() {
+            this.set('_oldState', {});
+            this.set('isDirty', false);
+        }
+    });
+    var record = recordObject.create(data);
+    identityMapForType(type, store)[data.id] = record;
     arrayForType(type, store).pushObject(record);
     return record;
-}
+};
 
 function arrayForType(type, store) {
     var all = store.get('array');
@@ -27,6 +67,10 @@ var Store = Ember.Object.extend({
         this.set('identityMap', {});
         this.set('array', {});
     },
+    clear: function(type) {
+        delete this.get('identityMap')[type]
+        arrayForType(type, this).clear();
+    },
     push: function(type, data) {
         var record = this.getById(type, data.id);
         if (record) {
@@ -36,8 +80,8 @@ var Store = Ember.Object.extend({
         }
         return record;
     },
-    remove: function(type, data) {
-        var record = this.getById(type, data.id);
+    remove: function(type, id) {
+        var record = this.getById(type, id);
         if (record) {
             delete this.get('identityMap')[type][record.id];
             arrayForType(type, this).removeObject(record);

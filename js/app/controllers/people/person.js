@@ -5,7 +5,7 @@ var PeoplePersonController = Ember.ObjectController.extend({
         submit: function() {
             var person_id = this.get('model.id');
             var opened = this.get('opened');
-            var newAction = Action.create({opened: opened, person_id: person_id});
+            var newAction = {opened: opened, person_id: person_id};
             this.store.push('action', newAction);
         }
     }

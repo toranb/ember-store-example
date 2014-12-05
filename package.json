@@ -4,12 +4,7 @@
         "testem": "*",
         "gulp-es6-module-transpiler": "*",
         "gulp": "*",
-        "gulp-debug": "*",
-        "gulp-util": "*",
         "gulp-filter": "*",
-        "gulp-coffee": "*",
-        "gulp-coffeelint": "*",
-        "coffee-script": "*",
         "gulp-concat": "*",
         "gulp-rev": "*",
         "gulp-uglify": "*",
@@ -17,13 +12,11 @@
   },
   "devDependencies": {
         "gulp-karma": "*",
-        "karma-qunit-special-blend": "*",
-        "karma-phantomjs-launcher": "*",
-        "karma-qunit": "*",
         "karma": "0.10",
         "karma-coverage": "~0.2.4",
-        "karma-qunit-special-blend": "0.0.1",
-        "qunit-special-blend": "0.0.3"
+        "karma-phantomjs-launcher": "*",
+        "karma-qunit": "*",
+        "karma-qunit-special-blend": "*"
   },
   "scripts": {
     "postinstall": "bower install"

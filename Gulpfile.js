@@ -1,8 +1,9 @@
 var gulp = require('gulp');
 var karma = require('gulp-karma');
+var rimraf = require('gulp-rimraf');
 var concat = require('gulp-concat');
 var gulpFilter = require('gulp-filter');
-var handlebars = require('gulp-ember-handlebars');
+var handlebars = require('gulp-ember-handlebarz');
 var transpiler = require('gulp-es6-module-transpiler');
 
 var paths = {
@@ -10,23 +11,21 @@ var paths = {
         'js/templates/**/*.handlebars'
     ],
     concatDist: [
-        'js/vendor/jquery/jquery.min.js',
+        'js/vendor/jquery/dist/jquery.min.js',
         'js/vendor/handlebars/handlebars.js',
-        'vendor/ember.min.js',
+        'js/vendor/ember/ember.min.js',
         'js/vendor/ember-loader/loader.js',
-        'vendor/ember-resolver.js',
+        'js/vendor/ember-resolver/dist/ember-resolver.js',
         'js/dist/tmpl.min.js',
         'js/app/**/*.js'
     ],
     concatTest: [
-        'js/vendor/jquery/jquery.min.js',
+        'js/vendor/jquery/dist/jquery.min.js',
         'js/vendor/handlebars/handlebars.js',
-        'vendor/ember.js',
-        'js/vendor/FakeXMLHttpRequest/fake_xml_http_request.js',
-        'js/vendor/fakehr/fakehr.js',
-        'js/vendor/ember-testing-httpRespond/httpRespond-1.1.js',
+        'js/vendor/ember/ember.js',
+        'js/vendor/fauxjax/dist/fauxjax.min.js',
         'js/vendor/ember-loader/loader.js',
-        'vendor/ember-resolver.js',
+        'js/vendor/ember-resolver/dist/ember-resolver.js',
         'js/dist/tmpl.min.js',
         'js/app/**/*.js',
         'js/tests/**/*.js',
@@ -60,7 +59,6 @@ gulp.task('test', ['emberhandlebars'], function(){
             prefix: "js"
         }))
         .pipe(filter.restore())
-        .pipe(concat('deps.min.js'))
         .pipe(gulp.dest('js/dist/'))
         .pipe(karma({
             configFile: 'karma.conf.js',
@@ -68,7 +66,12 @@ gulp.task('test', ['emberhandlebars'], function(){
         }));
 });
 
-gulp.task('emberhandlebars', function(){
+gulp.task('clean', function(){
+    return gulp.src('js/dist/', { read: false })
+        .pipe(rimraf());
+});
+
+gulp.task('emberhandlebars', ['clean'], function(){
     return gulp.src(paths.templates)
         .pipe(handlebars({outputType: 'browser'}))
         .pipe(concat('tmpl.min.js'))

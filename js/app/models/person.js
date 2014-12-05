@@ -5,7 +5,19 @@ var Person = Ember.Object.extend({
         var first = this.get('firstName');
         var last = this.get('lastName');
         return first + ' ' + last;
-    }.property('firstName', 'lastName')
+    }.property('firstName', 'lastName'),
+    init: function(){
+      this._super();
+      var self = this;
+      Ember.keys(this).forEach(function(key){
+        if(Ember.typeOf(self.get(key)) !== 'function'){
+          self.addObserver(key, function(){
+              debugger;
+            console.log(self.get(key));
+          });
+        }
+      }); 
+    }
 });
 
 Person.reopenClass({
@@ -18,7 +30,9 @@ Person.reopenClass({
     find: function(store) {
         $.getJSON('/api/people', function(response) {
             response.forEach(function(person) {
-                store.push('person', person);
+                Ember.run(function() {
+                  store.push('person', person);
+                });
             });
         });
         return store.getEverything('person');

@@ -12,7 +12,9 @@ Action.reopenClass({
     find: function(store) {
         $.getJSON('/api/actions', function(response) {
             response.forEach(function(action) {
-                store.push('action', action);
+                Ember.run(function() {
+                  store.push('action', action);
+                });
             });
         });
         return store.getEverything('action');

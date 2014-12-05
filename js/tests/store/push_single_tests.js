@@ -114,12 +114,12 @@ test("uses lookupFactory somewhere as part of a push", function() {
 
 test("uses container's returned typeFactory create() for instantiation", function() {
   var orig = this.container.lookupFactory('model:person'),
-      origCreate = orig.create,
+      origExtend = orig.extend,
       ping;
 
-  orig.create = function(opts) {
+  orig.extend = function(opts) {
     ping = 'pong';
-    return origCreate.apply(this, arguments);
+    return origExtend.apply(this, arguments);
   };
 
   store.push('person', {
@@ -163,7 +163,7 @@ test("remove should destory the item by type", function() {
   });
 
   equal(store.getEverything('person').length, 2);
-  store.remove('person', first);
+  store.remove('person', first.id);
   equal(store.getEverything('person').length, 1);
 
   var first_person = store.getById('person', first.id);

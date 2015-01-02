@@ -17,12 +17,12 @@ Action.reopenClass({
                 });
             });
         });
-        return store.getEverything('action');
+        return store.find('action');
     },
     findByPerson: function(store, person_id) {
         var related_attr = 'person_id';
         var related_id = parseInt(person_id, 10);
-        return store.filterEverything('action', related_attr, related_id);
+        return store.find('action', {person_id: related_id});
     }
 });
 

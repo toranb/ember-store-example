@@ -5,19 +5,7 @@ var Person = Ember.Object.extend({
         var first = this.get('firstName');
         var last = this.get('lastName');
         return first + ' ' + last;
-    }.property('firstName', 'lastName'),
-    init: function(){
-      this._super();
-      var self = this;
-      Ember.keys(this).forEach(function(key){
-        if(Ember.typeOf(self.get(key)) !== 'function'){
-          self.addObserver(key, function(){
-              debugger;
-            console.log(self.get(key));
-          });
-        }
-      }); 
-    }
+    }.property('firstName', 'lastName')
 });
 
 Person.reopenClass({
@@ -35,10 +23,10 @@ Person.reopenClass({
                 });
             });
         });
-        return store.getEverything('person');
+        return store.find('person');
     },
     findById: function(store, id) {
-        return store.getById('person', id);
+        return store.find('person', id);
     }
 });
 

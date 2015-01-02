@@ -47,8 +47,5 @@ function stubEndpointForHttpRequest(url, json, verb, status) {
 $.fauxjax.settings.responseTime = 0;
 
 require('js/helpers/start-app');
-require('js/store/basic_tests');
-require('js/store/init_tests');
-require('js/store/push_single_tests');
 require('js/integration/integration_tests');
 require('js/unit/unit_tests');

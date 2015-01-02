@@ -1,52 +1,15 @@
-function clone(obj) {
-    var copy = {};
-    for(var key in obj){
-        if(obj.hasOwnProperty(key)) {
-            copy[key] = obj[key];
-        }
-    }
-    return copy;
-};
-
-function restore(obj, oldState) {
-    for(var key in oldState){
-        obj.set(key, oldState[key]);
-    }
-};
-
 function buildRecord(type, data, store) {
     var containerKey = 'model:' + type;
     var factory = store.container.lookupFactory(containerKey);
-    var recordObject = factory.extend({
-        isDirty: false,
-        set: function(key, value) {
-            debugger;
-            if(this.get(key) !== value && !this.get('isDirty')) {
-                this._super('isDirty', true);
-                var oldState = clone(this);
-                this._super('_oldState', oldState);
-            }
-            return this._super(key, value);
-        },
-        save: function() {
-            this._clear();
-            this._super();
-        },
-        revert: function() {
-            restore(this, this.get('_oldState'));
-            this._clear();
-            this._super();
-        },
-        _clear: function() {
-            this.set('_oldState', {});
-            this.set('isDirty', false);
-        }
-    });
-    var record = recordObject.create(data);
-    identityMapForType(type, store)[data.id] = record;
+
+    Ember.assert('No model was found for type: ' + type, factory);
+
+    var record = factory.create(data);
+    var id = data.id;
+    identityMapForType(type, store)[id] = record;
     arrayForType(type, store).pushObject(record);
     return record;
-};
+}
 
 function arrayForType(type, store) {
     var all = store.get('array');
@@ -72,7 +35,7 @@ var Store = Ember.Object.extend({
         arrayForType(type, this).clear();
     },
     push: function(type, data) {
-        var record = this.getById(type, data.id);
+        var record = this._getById(type, data.id);
         if (record) {
             record.setProperties(data);
         } else {
@@ -81,20 +44,35 @@ var Store = Ember.Object.extend({
         return record;
     },
     remove: function(type, id) {
-        var record = this.getById(type, id);
+        var record = this._getById(type, id);
         if (record) {
             delete this.get('identityMap')[type][record.id];
             arrayForType(type, this).removeObject(record);
         }
     },
-    getById: function(type, id) {
+    find: function(type, options) {
+        if (typeof options === 'undefined') {
+            return this._getEverything(type);
+        }
+        if (typeof options === 'object') {
+            var params = Object.keys(options);
+
+            Ember.assert('No key was found in the filter options', params.length);
+
+            var attr = params[0];
+            var value = options[attr];
+            return this._filterEverything(type, attr, value);
+        }
+        return this._getById(type, options);
+    },
+    _getById: function(type, id) {
         var identityMap = identityMapForType(type, this);
         return identityMap[id] || null;
     },
-    getEverything: function(type) {
+    _getEverything: function(type) {
         return arrayForType(type, this);
     },
-    filterEverything: function(type, filter_attr, filter_value) {
+    _filterEverything: function(type, filter_attr, filter_value) {
         var computed_string = 'source.@each.' + filter_attr;
         return Em.ArrayProxy.extend({
           source: undefined,
@@ -104,7 +82,7 @@ var Store = Ember.Object.extend({
           }.property(computed_string)
         }).create({
           filter_value: filter_value,
-          source: this.getEverything(type)
+          source: this._getEverything(type)
         });
     }
 });
